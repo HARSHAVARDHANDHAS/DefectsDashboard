@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Channel Hub 1.3 - Defects</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f4f4f4; }
+        .dashboard-container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        /* Updated toolbar container mimicking IMG_3890.jpg */
+        header { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            padding: 10px 20px; 
+            background: #ffffff; 
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .header-left-group { display: flex; align-items: center; gap: 15px; }
+        
+        /* Navigation & Status Elements */
+        .home-icon { font-size: 28px; cursor: pointer; color: #000; display: flex; align-items: center; }
+        .back-arrow { font-size: 28px; cursor: pointer; color: #4b5563; display: flex; align-items: center; }
+        
+        .status-box { display: flex; align-items: center; border: 1px solid #ccc; font-size: 14px; font-weight: bold; height: 32px; }
+        .status-label-swc { background: #ff6b6b; color: white; padding: 0 8px; display: flex; align-items: center; height: 100%; }
+        .status-label-rw { background: #ffbe0b; color: black; padding: 0 8px; display: flex; align-items: center; height: 100%; }
+        .status-value { padding: 0 12px; background: #fff; display: flex; align-items: center; height: 100%; min-width: 45px; justify-content: center; }
+        
+        .analysis-icon { font-size: 24px; display: flex; align-items: center; border: 1px solid #ccc; padding: 3px 8px; border-radius: 4px; background: #f8f9fa; }
+
+        /* Retained Active Channel Box styled cleanly for the toolbar */
+        .channel-switcher-box { display: flex; align-items: center; gap: 8px; background: #f3f4f6; padding: 4px 10px; border-radius: 6px; border: 1px solid #d1d5db; }
+        .channel-select { background: #1f2937; color: #ffffff; border: 1px solid #4b5563; padding: 4px 8px; border-radius: 4px; font-size: 13px; font-weight: bold; cursor: pointer; }
+        
+        /* Main Central Header banner from image */
+        .header-center-banner { 
+            background: #1e40af; 
+            color: white; 
+            padding: 8px 40px; 
+            font-size: 22px; 
+            font-weight: bold; 
+            letter-spacing: 1px;
+            border-bottom: 3px solid #1d4ed8;
+            text-align: center;
+            min-width: 200px;
+        }
+        
+        .header-right-group { display: flex; align-items: center; gap: 20px; }
+        #datetime { font-size: 15px; font-weight: bold; color: #333; }
+        
+        /* SKF Placeholder Logo Styling */
+        .skf-logo { font-size: 28px; font-weight: 900; color: #0056b3; letter-spacing: -1px; font-family: 'Arial Black', sans-serif; }
+
+        /* Grid & Card System */
+        .defect-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; padding: 20px; }
+        @media (max-width: 1200px) { .defect-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
+        
+        .defect-card { border: 1px solid #bbb; border-radius: 4px; padding: 6px; text-align: center; cursor: pointer; transition: transform 0.1s; background: #fff; display: flex; flex-direction: column; justify-content: space-between;}
+        .defect-card:hover { transform: scale(1.02); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        
+        .defect-title { font-size: 11px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; min-height: 28px; display: flex; align-items: center; justify-content: center; background: #e5e7eb; padding: 2px; }
+        .title-red { color: #dc2626; }
+        .title-orange { color: #ea580c; }
+        
+        .defect-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 2px; margin-bottom: 5px; background: #e5e7eb; border: 1px solid #ddd; }
+        
+        /* Count display setup resembling the visual boxes */
+        .count-display { display: flex; font-size: 12px; font-weight: bold; border: 1px solid #0056b3; border-radius: 2px; overflow: hidden; }
+        .count-label { background: #0056b3; color: white; padding: 3px 6px; flex: 1; text-align: center; }
+        .count-val-box { background: white; color: black; padding: 3px 6px; min-width: 45px; text-align: center; border-left: 1px solid #0056b3; }
+        
+        footer { padding: 12px 20px; background: #f8f9fa; border-top: 1px solid #e5e7eb; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        <header>
+            <div class="header-left-group">
+                <!-- Home Icon SVG -->
+                <div class="home-icon" title="Home">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                </div>
+                <!-- Back Arrow SVG -->
+                <div class="back-arrow" title="Back">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </div>
+                
+                <!-- SWC Value Box -->
+                <div class="status-box">
+                    <span class="status-label-swc">SWC</span>
+                    <span class="status-value">7.00</span>
+                </div>
+                
+                <!-- RW Value Box -->
+                <div class="status-box">
+                    <span class="status-label-rw">RW</span>
+                    <span class="status-value">0.00</span>
+                </div>
+
+                <!-- Feature/Analysis Icon SVG -->
+                <div class="analysis-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" stroke-yellow="true"/><line x1="9" y1="17" x2="9" y2="10"/><line x1="13" y1="17" x2="13" y2="7"/><line x1="17" y1="17" x2="17" y2="13"/></svg>
+                </div>
+
+                <!-- Retained Dynamic Channel Switcher -->
+                <div class="channel-switcher-box">
+                    <label for="channelSelect" style="font-size: 11px; font-weight: bold; color: #374151;">CHANNEL:</label>
+                    <select id="channelSelect" class="channel-select" onchange="onChannelChange()">
+                        <option value="channel1" selected>Channel 1 (24 Defects)</option>
+                        <option value="channel2">Channel 2 (35 Defects)</option>
+                        <option value="channel3">Channel 3 (24 Defects)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Central Display Heading -->
+            <div class="header-center-banner">DEFECTS</div>
+
+            <div class="header-right-group">
+                <!-- Timestamp Indicator -->
+                <span id="datetime"></span>
+                <!-- Logo Display Section -->
+                <span class="skf-logo">SKF®</span>
+            </div>
+        </header>
+
+        <main id="defectGrid" class="defect-grid"></main>
+
+        <footer>
+            <div id="apiStatus" style="font-weight: bold; color: #4b5563;">System initializing...</div>
+        </footer>
+    </div>
+
+    <script>
+        let currentChannel = 'channel1';
+
+        // CHANNEL HUB 1.3 CONFIGURATION
+        const masterConfigurations = {
+            channel1: { 
+                maxDefects: 24, 
+                imgPattern: (i) => `IMG_4620_${i}.jpg`, 
+                titles: {  
+                    defect1: { text: 'BLACK MARK IN IR BORE', style: 'title-red' },
+                    defect2: { text: 'BLACK MARK ON OD', style: 'title-red' },
+                    defect3: { text: 'CIRCULAR MARK ON OD', style: 'title-red' },
+                    defect4: { text: 'CUT MARK ON IR FACE', style: 'title-red' },
+                    defect5: { text: 'EXCESS SEAL PRESSING', style: 'title-red' },
+                    defect6: { text: 'FLINGER MISSING', style: 'title-red' },
+                    defect7: { text: 'SEAL MISSING', style: 'title-red' },
+                    defect8: { text: 'FLINGER OUT', style: 'title-red' },
+                    defect9: { text: 'IR FACE UNCLEAN', style: 'title-red' },
+                    defect10: { text: 'RUSTY', style: 'title-red' },
+                    defect11: { text: 'LINE MARK ON OD', style: 'title-red' },
+                    defect12: { text: 'SEAL OUT', style: 'title-red' },
+                    defect13: { text: 'WRONG MARKING', style: 'title-red' },
+                    defect14: { text: 'SEAL BEND', style: 'title-red' },
+                    defect15: { text: 'FLAT MARK ON OD', style: 'title-red' },
+                    defect16: { text: 'DENT MARK ON IR', style: 'title-red' },
+                    defect17: { text: 'DOUBLE MARKING', style: 'title-red' },
+                    defect18: { text: 'REVERSE SEAL FITMENT', style: 'title-red' },
+                    defect19: { text: 'SIMILAR VARIANT', style: 'title-red' },
+                    defect20: { text: 'WITHOUT MARKING', style: 'title-red' },
+                    defect21: { text: 'OD GRINDING MARK', style: 'title-red' },
+                    defect22: { text: 'BOTH SIDE ABS SEAL', style: 'title-red' },
+                    defect23: { text: 'IR CHATTER MARK', style: 'title-red' },
+                    defect24: { text: 'ROLLER MISSING', style: 'title-red' } 
+                } 
+            },
+            channel2: { 
+                maxDefects: 35, 
+                imgPattern: (i) => `defect-${String(i).padStart(2, '0')}.jpeg`, 
+                titles: { 
+                    defect1: { text: 'OR FACE UNCLEAR', style: 'title-red' },
+                    defect2: { text: 'OR FACE DAMAGED', style: 'title-red' },
+                    defect3: { text: 'FLOWERING MARK', style: 'title-red' },
+                    defect4: { text: 'SHOE /ROLLER MARK', style: 'title-red' },
+                    defect5: { text: 'OD MARK', style: 'title-red' },
+                    defect6: { text: 'OR FACE MARK', style: 'title-red' },
+                    defect7: { text: 'OR FACE DENT', style: 'title-red' },
+                    defect8: { text: 'OR GROOVE DENT', style: 'title-red' },
+                    defect9: { text: 'UN EVEN OR RADIUS', style: 'title-red' },
+                    defect10: { text: 'CAGEFILL', style: 'title-red' },
+                    defect11: { text: 'IR FACE DAMAGE', style: 'title-red' },
+                    defect12: { text: 'IR FACE UNCLEAR', style: 'title-red' },
+                    defect13: { text: 'DENT IN IR FACE', style: 'title-red' },
+                    defect14: { text: 'IR FACE MARK', style: 'title-red' },
+                    defect15: { text: 'EXCESSIVE BORE RADIUS', style: 'title-red' },
+                    defect16: { text: 'BORE RADIUS MISSING', style: 'title-red' },
+                    defect17: { text: 'CAGE CRACK', style: 'title-red' },
+                    defect18: { text: 'RUSTY MARK', style: 'title-red' },
+                    defect19: { text: 'RIVET HEAD NOT FORMED', style: 'title-red' },
+                    defect20: { text: 'IMPROPER RIVETING', style: 'title-red' },
+                    defect21: { text: 'CAGE MISSING', style: 'title-red' },
+                    defect22: { text: 'RIVET MISSING', style: 'title-red' },
+                    defect23: { text: 'RIVERSE SEALING', style: 'title-red' }, 
+                    defect24: { text: 'UNPRESSED SEAL', style: 'title-red' },
+                    defect25: { text: 'SEAL DAMAGE', style: 'title-red' },
+                    defect26: { text: 'SHEILD DENT', style: 'title-red' }, 
+                    defect27: { text: 'SHEILD BEND', style: 'title-red' }, 
+                    defect28: { text: 'REVRSE SHEILDING', style: 'title-red' }, 
+                    defect29: { text: 'DOUBLE ETCHING', style: 'title-red' },
+                    defect30: { text: 'LETTERS MISSING', style: 'title-red' },
+                    defect31: { text: 'BEARING WITH INNER RING CLIT MARK', style: 'title-red' },
+                    defect32: { text: 'BEARINNG WITH INNER RING CHAMFER MISIING', style: 'title-red' }, 
+                    defect33: { text: 'MARKING MISSING', style: 'title-red' },
+                    defect34: { text: 'DETECTIVE-RIVET HEAD FORM', style: 'title-red' },
+                    defect35: { text: 'Other Defect', style: 'title-red' } 
+                } 
+            },
+            channel3: { 
+                maxDefects: 24, 
+                imgPattern: (i) => `IMG_4619_${i}.jpg`, 
+                titles: { 
+                    defect1: { text: 'OR OD Unclean', style: 'title-red' },
+                    defect2: { text: 'OR Forg. Defect', style: 'title-red' },
+                    defect3: { text: 'OR Burning', style: 'title-red' },
+                    defect4: { text: 'OR Track Unclean', style: 'title-red' },
+                    defect5: { text: 'OR Rusty Mark', style: 'title-red' },
+                    defect6: { text: 'OR Chamf N/OK', style: 'title-red' },
+                    defect7: { text: 'Bore Chamf N/OK', style: 'title-red' },
+                    defect8: { text: 'Bad Marking', style: 'title-red' },
+                    defect9: { text: 'Burnig mark', style: 'title-red' }, 
+                    defect10: { text: 'Face Mark', style: 'title-red' },
+                    defect11: { text: 'Roller Dimple missing', style: 'title-red' },
+                    defect12: { text: 'Roller Damaged', style: 'title-red' },
+                    defect13: { text: 'Forging defect on Face', style: 'title-red' },
+                    defect14: { text: 'Face Unclean', style: 'title-red' },
+                    defect15: { text: 'Roller Material deffect', style: 'title-red' }, 
+                    defect16: { text: 'Dent Mark on IR', style: 'title-red' },
+                    defect17: { text: 'Inverted Roller', style: 'title-red' },
+                    defect18: { text: 'Face Cut', style: 'title-red' },
+                    defect19: { text: 'Bore Black', style: 'title-red' },
+                    defect20: { text: 'OR Bad Eaching', style: 'title-orange' }, 
+                    defect21: { text: 'OR Bad Honing', style: 'title-orange' },
+                    defect22: { text: 'OR OD Mark', style: 'title-orange' },
+                    defect23: { text: 'OR Face Mark', style: 'title-orange' },
+                    defect24: { text: 'Roller Missing', style: 'title-red' }
+                } 
+            }
+        };
+
+        // Live clock formatting sync
+        setInterval(() => { 
+            const now = new Date();
+            document.getElementById('datetime').textContent = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}); 
+        }, 1000);
+
+        // Draw the cards dynamically based on the maxDefects limit
+        function rebuildDashboardGrid() {
+            const grid = document.getElementById('defectGrid');
+            grid.innerHTML = '';
+            const config = masterConfigurations[currentChannel];
+
+            const missingImageSVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiNlNWU3ZWIiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOWNhM2FmIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5JbWFnZSBNaXNzaW5nPC90ZXh0Pjwvc3ZnPg==";
+
+            for (let i = 1; i <= config.maxDefects; i++) {
+                const id = `defect${i}`;
+                let labelText = config.titles[id] ? config.titles[id].text : `DEFECT TYPE ${i}`;
+                let labelClass = config.titles[id] ? config.titles[id].style : 'title-orange';
+                const imageSrc = config.imgPattern(i);
+                
+                const cardHtml = `
+                    <div class="defect-card" onclick="incrementDefectTally('${id}')">
+                        <div class="defect-title ${labelClass}">${labelText}</div>
+                        <img src="${imageSrc}" onerror="this.onerror=null; this.src='${missingImageSVG}';">
+                        <div class="count-display">
+                            <span class="count-label">Count</span>
+                            <span class="count-val-box" id="${id}">0.00</span>
+                        </div>
+                    </div>
+                `;
+                grid.insertAdjacentHTML('beforeend', cardHtml);
+            }
+        }
+
+        function onChannelChange() {
+            currentChannel = document.getElementById('channelSelect').value;
+            rebuildDashboardGrid();
+            fetchTallyCounts();
+        }
+
+        async function fetchTallyCounts() {
+            const statusBox = document.getElementById('apiStatus');
+            const config = masterConfigurations[currentChannel];
+            
+            try {
+                const BACKEND_URL = ``;
+
+                const response = await fetch(`${BACKEND_URL}/api/counts?channel=${currentChannel}`);
+                if (!response.ok) throw new Error(response.statusText);
+                const { counts } = await response.json();
+                
+                for (let i = 1; i <= config.maxDefects; i++) {
+                    const id = `defect${i}`;
+                    const targetEl = document.getElementById(id);
+                    if (targetEl) {
+                        let rawVal = counts[id] !== undefined ? counts[id] : 0;
+                        targetEl.textContent = Number(rawVal).toFixed(2);
+                    }
+                }
+                statusBox.textContent = `🟢 Connected to ${currentChannel.toUpperCase()} [${config.maxDefects} Active Parameters]`;
+                statusBox.style.color = '#155724';
+            } catch (err) {
+                statusBox.textContent = '🔴 Server Error: ' + err.message;
+                statusBox.style.color = '#dc2626';
+            }
+        }
+
+        async function incrementDefectTally(id) {
+            try {
+                const BACKEND_URL = ``;
+                const response = await fetch(`${BACKEND_URL}/api/counts/${id}/increment?channel=${currentChannel}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                if (!response.ok) throw new Error("Save Failed");
+                const result = await response.json();
+                
+                const targetEl = document.getElementById(id);
+                if (targetEl) targetEl.textContent = Number(result.value).toFixed(2);
+            } catch (err) {
+                document.getElementById('apiStatus').textContent = "🔴 Failed to save click.";
+            }
+        }
+
+        rebuildDashboardGrid();
+        fetchTallyCounts();
+    </script>
+</body>
+</html>

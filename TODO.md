@@ -1,0 +1,11 @@
+- [x] Update package.json to add MySQL driver dependency (mysql2)
+- [x] Update server.js to replace JSON-based counts with MySQL-backed current-hour update/insert logic
+- [ ] Implement defect1..defectN -> SQL column mapping for channel1/channel2/channel3 based on schema.sql column order
+- [ ] Add GET /api/counts and POST /api/counts/:id/increment handlers to use MySQL
+- [x] Run npm install and start server
+- [x] Smoke-test:
+  - [x] GET /api/counts?channel=channel1|2|3 (current hour row)
+  - [x] POST /api/counts/defect1/increment?channel=channel1
+  - [x] Verify row was inserted/updated for current hour (defect2 defect counts increased)
+  - [x] POST increments for channel2 (defect35 increased to 1)
+  - [x] Invalid defect id returns 400 (e.g. defect999)
